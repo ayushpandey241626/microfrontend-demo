@@ -26,22 +26,4 @@ export const routes: Routes = [
         remoteEntry: 'http://localhost:4202/remoteEntry.js',
       }).then((m) => m.default),
   },
-  // {
-  //   path: 'mfe1',
-  //   loadChildren: () =>
-  //     loadRemoteModule({
-  //       type: 'module',
-  //       remoteEntry: 'http://localhost:4201/remoteEntry.js',
-  //       exposedModule: './Module',
-  //     }).then((m) => m.Mfe1Module),
-  // },
-  // {
-  //   path: 'mfe2',
-  //   loadChildren: () =>
-  //     loadRemoteModule({
-  //       type: 'module',
-  //       remoteEntry: 'http://localhost:4202/remoteEntry.js',
-  //       exposedModule: './Module',
-  //     }).then((m) => m.Mfe2Module),
-  // },
 ];

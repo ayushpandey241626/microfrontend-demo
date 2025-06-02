@@ -24,7 +24,10 @@
                 "output": "."
               }
             ],
-            "styles": ["projects/host-app/src/styles.css"],
+            "styles": [
+              "projects/host-app/src/styles.css",
+              "primeicons/primeicons.css"
+            ],
             "scripts": [],
             "main": "projects/host-app/src/main.ts",
             "extraWebpackConfig": "projects/host-app/webpack.config.js",
@@ -87,7 +90,10 @@
                 "input": "projects/host-app/public"
               }
             ],
-            "styles": ["projects/host-app/src/styles.css"],
+            "styles": [
+              "projects/host-app/src/styles.css",
+              "primeicons/primeicons.css"
+            ],
             "scripts": []
           }
         }
@@ -114,7 +120,10 @@
                 "output": "."
               }
             ],
-            "styles": ["projects/mfe1/src/styles.css"],
+            "styles": [
+              "projects/mfe1/src/styles.css",
+              "primeicons/primeicons.css"
+            ],
             "scripts": [],
             "main": "projects/mfe1/src/main.ts",
             "extraWebpackConfig": "projects/mfe1/webpack.config.js",
@@ -177,7 +186,10 @@
                 "input": "projects/mfe1/public"
               }
             ],
-            "styles": ["projects/mfe1/src/styles.css"],
+            "styles": [
+              "projects/mfe1/src/styles.css",
+              "primeicons/primeicons.css"
+            ],
             "scripts": []
           }
         }
@@ -204,7 +216,10 @@
                 "output": "."
               }
             ],
-            "styles": ["projects/mfe2/src/styles.css"],
+            "styles": [
+              "projects/mfe2/src/styles.css",
+              "primeicons/primeicons.css"
+            ],
             "scripts": [],
             "main": "projects/mfe2/src/main.ts",
             "extraWebpackConfig": "projects/mfe2/webpack.config.js",
@@ -267,7 +282,10 @@
                 "input": "projects/mfe2/public"
               }
             ],
-            "styles": ["projects/mfe2/src/styles.css"],
+            "styles": [
+              "projects/mfe2/src/styles.css",
+              "primeicons/primeicons.css"
+            ],
             "scripts": []
           }
         }

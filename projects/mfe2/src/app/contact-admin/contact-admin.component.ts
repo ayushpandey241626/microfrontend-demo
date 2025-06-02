@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-contact-admin',
-  imports: [FormsModule],
+  imports: [FormsModule, ButtonModule],
   templateUrl: './contact-admin.component.html',
   styleUrl: './contact-admin.component.css',
   providers: [MessageService],
