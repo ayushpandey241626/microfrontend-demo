@@ -1,0 +1,61 @@
+/* Wrapper for filter panel */
+.contact-filter-panel {
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+
+/* Arrange filter controls in a row (flex) */
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+}
+
+/* Ensures labels and inputs align */
+.filter-item label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+/* Date range picker needs slightly more width */
+.date-range ::ng-deep .p-inputtext {
+  width: 250px;
+}
+
+/* Table container for some spacing */
+.contact-table-container {
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Tag chips */
+.tag-chip {
+  background-color: #efefef;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.85rem;
+  margin-right: 4px;
+}
+
+/* Adjust table header font weight */
+.p-table thead th {
+  font-weight: 600;
+  background-color: #f5f5f5;
+}
+
+/* Center “No contacts found.” */
+.p-table .p-dataview-emptymessage,
+.p-table .p-empty-message {
+  text-align: center;
+}

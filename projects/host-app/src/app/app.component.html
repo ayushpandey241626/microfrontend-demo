@@ -1,9 +1,19 @@
 <p-menubar [model]="items">
   <ng-template pTemplate="start">
-    <span class="p-text-bold app-title">Microfrontend Demo</span>
+    <!-- Make title clickable -->
+    <a
+      class="p-text-bold app-title"
+      style="cursor: pointer; text-decoration: underline"
+      (click)="goHome()"
+      >Microfrontend Demo</a
+    >
   </ng-template>
 </p-menubar>
 
 <div class="p-p-3">
+  <!-- Show instruction text only when at home route -->
+  <div *ngIf="isHome">
+    Click on the menu bar at top to go to the respective page
+  </div>
   <router-outlet></router-outlet>
 </div>

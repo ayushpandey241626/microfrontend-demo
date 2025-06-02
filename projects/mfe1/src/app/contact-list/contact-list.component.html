@@ -1,25 +1,101 @@
-<div class="p-p-4 card">
-  <h2>Contact List</h2>
-  <p-table [value]="contacts" [paginator]="true" [rows]="5">
-    <ng-template pTemplate="header">
+<div class="contact-filter-panel">
+  <div class="filter-row">
+    <!-- Group Dropdown -->
+    <div class="filter-item">
+      <label for="groupDrop">Group:</label>
+      <p-dropdown
+        inputId="groupDrop"
+        [options]="groupOptions"
+        [(ngModel)]="selectedGroup"
+        placeholder="Select Group"
+        (onChange)="onGroupChange()"
+      ></p-dropdown>
+    </div>
+
+    <!-- Name Autocomplete -->
+    <div class="filter-item">
+      <label for="nameAuto">Name:</label>
+      <p-autocomplete
+        inputId="nameAuto"
+        [suggestions]="nameSuggestions"
+        field="name"
+        (completeMethod)="filterNameSuggestions($event)"
+        [(ngModel)]="nameControl"
+        (onSelect)="onSelectNameSuggestion($event)"
+        placeholder="Search by name"
+      ></p-autocomplete>
+    </div>
+
+    <!-- Tags Multiselect -->
+    <div class="filter-item">
+      <label for="tagMulti">Tags:</label>
+      <p-multiselect
+        inputId="tagMulti"
+        [options]="tagOptions"
+        [(ngModel)]="selectedTags"
+        placeholder="Select Tags"
+        (onChange)="onTagsChange()"
+        display="chip"
+      ></p-multiselect>
+    </div>
+
+    <!-- Date Range Picker -->
+    <div class="filter-item date-range">
+      <label for="dateRange">Date Added:</label>
+      <p-calendar
+        inputId="dateRange"
+        [(ngModel)]="selectedDateRange"
+        selectionMode="range"
+        dateFormat="yy-mm-dd"
+        [showTime]="true"
+        placeholder="Select Date Range"
+        (onSelect)="onDateRangeSelect()"
+      ></p-calendar>
+    </div>
+  </div>
+</div>
+
+<div class="contact-table-container">
+  <p-table
+    [value]="filteredContacts"
+    paginator="true"
+    [rows]="10"
+    [responsive]="true"
+    [resizableColumns]="true"
+    [columns]="[
+      { field: 'name', header: 'Name' },
+      { field: 'email', header: 'Email' },
+      { field: 'phone', header: 'Phone' },
+      { field: 'group', header: 'Group' },
+      { field: 'tags', header: 'Tags' },
+      { field: 'dateAdded', header: 'Date Added' }
+    ]"
+  >
+    <ng-template pTemplate="header" let-columns>
       <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Actions</th>
+        <th *ngFor="let col of columns" pResizableColumn>
+          {{ col.header }}
+        </th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-contact>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
       <tr>
-        <td>{{ contact.name }}</td>
-        <td>{{ contact.email }}</td>
+        <td>{{ rowData.name }}</td>
+        <td>{{ rowData.email }}</td>
+        <td>{{ rowData.phone }}</td>
+        <td>{{ rowData.group }}</td>
         <td>
-          <button
-            pButton
-            icon="pi pi-trash"
-            class="p-button-danger"
-            (click)="deleteContact(contact.id)"
-          ></button>
+          <ng-container *ngFor="let t of rowData.tags; let i = index">
+            <span class="tag-chip">{{ t }}</span
+            ><ng-container *ngIf="i < rowData.tags.length - 1">, </ng-container>
+          </ng-container>
         </td>
+        <td>{{ rowData.dateAdded | date : "yyyy-MM-dd HH:mm" }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6">No contacts found.</td>
       </tr>
     </ng-template>
   </p-table>
