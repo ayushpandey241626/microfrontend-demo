@@ -1,0 +1,24 @@
+<!-- <nav>
+  <a routerLink="/home">Home</a>
+  <a routerLink="/mfe1">MFE1</a>
+  <a routerLink="/mfe2">MFE2</a>
+</nav>
+
+<router-outlet></router-outlet>
+<div class="card flex justify-content-center">
+  <p-dropdown
+    [options]="cities"
+    optionLabel="name"
+    placeholder="Select a City"
+  />
+</div> -->
+
+<p-menubar [model]="items">
+  <ng-template pTemplate="start">
+    <span class="p-text-bold app-title">Microfrontend Demo</span>
+  </ng-template>
+</p-menubar>
+
+<div class="p-p-3">
+  <router-outlet></router-outlet>
+</div>

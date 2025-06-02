@@ -1,0 +1,19 @@
+<div class="p-p-4 card">
+  <h2>Contact Administration</h2>
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="name">Name</label>
+      <input id="name" type="text" pInputText [(ngModel)]="newContact.name" />
+    </div>
+    <div class="p-field">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        pInputText
+        [(ngModel)]="newContact.email"
+      />
+    </div>
+    <button pButton label="Add Contact" (click)="addContact()"></button>
+  </div>
+</div>

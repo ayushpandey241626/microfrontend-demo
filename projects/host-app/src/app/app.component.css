@@ -1,0 +1,77 @@
+/* Style for the menubar */
+:host ::ng-deep .p-menubar {
+  border-radius: 0 !important;
+  margin-bottom: 20px !important;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Title styling */
+:host ::ng-deep .p-text-bold {
+  color: #fff;
+  font-weight: 600;
+}
+
+.app-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+  margin-right: 40px;
+  letter-spacing: 1px;
+}
+
+/* Main content padding */
+.p-p-3 {
+  padding: 2rem;
+  background: #f4f6fb;
+  min-height: 80vh;
+}
+
+/* Center card and dropdown */
+.card.flex.justify-content-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+/* Card styling */
+.card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+}
+
+/* Menu links styling */
+.menu-links {
+  display: flex;
+  gap: 3rem; /* Increased gap for more space */
+  align-items: center;
+}
+
+.menu-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: color 0.2s;
+  cursor: pointer; /* Show pointer cursor */
+}
+
+.menu-link:hover {
+  color: #90caf9;
+  cursor: pointer; /* Ensure pointer on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .p-p-3 {
+    padding: 1rem;
+  }
+  .card {
+    padding: 1rem;
+  }
+}
