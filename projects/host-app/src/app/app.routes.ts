@@ -17,16 +17,15 @@ export const routes: Routes = [
         remoteEntry: 'http://localhost:4201/remoteEntry.js',
       }).then((m) => m.default),
   },
-  // {
-  //   path: 'admin',
-  //   loadChildren: () => {
-  //     return loadRemoteModule({
-  //       remoteName: 'mfe2',
-  //       exposedModule: './AdminModule',
-  //       remoteEntry: 'http://localhost:4202/remoteEntry.js',
-  //     }).then((m) => m.AdminModule);
-  //   },
-  // },
+  {
+    path: 'admin',
+    loadChildren: () =>
+      loadRemoteModule({
+        type: 'module',
+        exposedModule: './AdminModule',
+        remoteEntry: 'http://localhost:4202/remoteEntry.js',
+      }).then((m) => m.default),
+  },
   // {
   //   path: 'mfe1',
   //   loadChildren: () =>

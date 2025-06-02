@@ -1,6 +1,4 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { ContactListComponent } from './contact-list/contact-list.component';
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   //{ path: '', redirectTo: 'contacts', pathMatch: 'full' },
