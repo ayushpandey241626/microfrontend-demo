@@ -12,6 +12,10 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { ChipModule } from 'primeng/chip';
 import { FormControl, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
 
 interface Contact {
   id: number;
@@ -26,6 +30,8 @@ interface Contact {
   selector: 'app-contact-list',
   imports: [
     TableModule,
+    ConfirmDialogModule,
+    MessageModule,
     ButtonModule,
     DialogModule,
     InputTextModule,
@@ -39,9 +45,11 @@ interface Contact {
     ChipModule,
     CommonModule,
     FormsModule,
+    ToastModule,
   ],
   templateUrl: './contact-list.component.html',
   styleUrl: './contact-list.component.css',
+  providers: [ConfirmationService, MessageService],
 })
 export class ContactListComponent {
   // For p-table
@@ -74,7 +82,15 @@ export class ContactListComponent {
     dateAdded: undefined,
   };
 
-  constructor(private contactService: ContactService) {}
+  // For row editing
+  editingRows: { [key: number]: boolean } = {};
+  originalRowData: { [key: number]: Contact } = {};
+
+  constructor(
+    private contactService: ContactService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     // Populate with some mock contacts (in real app, fetch from API)
@@ -180,11 +196,19 @@ export class ContactListComponent {
       // Date range filter
       if (this.selectedDateRange && this.selectedDateRange.length === 2) {
         const [start, end] = this.selectedDateRange;
-        const d = new Date(
-          c.dateAdded.getFullYear(),
-          c.dateAdded.getMonth(),
-          c.dateAdded.getDate()
-        );
+        // Ensure c.dateAdded is a Date object
+        let date: Date;
+        if (c.dateAdded instanceof Date) {
+          date = c.dateAdded;
+        } else if (
+          typeof c.dateAdded === 'string' ||
+          typeof c.dateAdded === 'number'
+        ) {
+          date = new Date(c.dateAdded);
+        } else {
+          return false;
+        }
+        const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         if (d < start || d > end) {
           return false;
         }
@@ -238,5 +262,66 @@ export class ContactListComponent {
   }
   filteredGroupOptions() {
     return this.groupOptions?.filter((g) => g && g.value !== null) || [];
+  }
+
+  onRowEditInit(rowData: Contact) {
+    this.editingRows[rowData.id] = true;
+    // Deep copy to restore on cancel
+    this.originalRowData[rowData.id] = JSON.parse(JSON.stringify(rowData));
+  }
+
+  onRowEditSave(rowData: Contact) {
+    // Validate required fields
+    if (
+      !rowData.name ||
+      !rowData.email ||
+      !rowData.phone ||
+      !rowData.group ||
+      !rowData.dateAdded
+    ) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Validation Error',
+        detail: 'All fields are required.',
+      });
+      return;
+    }
+    // Optionally: validate email/phone format here
+    delete this.originalRowData[rowData.id];
+    this.editingRows[rowData.id] = false;
+    this.applyAllFilters();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Contact Updated',
+      detail: 'Contact updated successfully.',
+      life: 2000,
+    });
+  }
+
+  onRowEditCancel(rowData: Contact, rowIndex: number) {
+    // Restore original data
+    const original = this.originalRowData[rowData.id];
+    if (original) {
+      Object.assign(rowData, original);
+      delete this.originalRowData[rowData.id];
+    }
+    this.editingRows[rowData.id] = false;
+  }
+
+  onDeleteContact(rowData: Contact) {
+    this.confirmationService.confirm({
+      message: `Are you sure you want to delete contact "${rowData.name}"?`,
+      header: 'Confirm Delete',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.contacts = this.contacts.filter((c) => c.id !== rowData.id);
+        this.applyAllFilters();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Contact Deleted',
+          detail: 'Contact deleted successfully.',
+        });
+      },
+    });
   }
 }

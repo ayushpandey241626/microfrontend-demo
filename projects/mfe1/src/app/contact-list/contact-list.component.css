@@ -150,6 +150,39 @@ div[style*="margin-bottom: 1rem"] .p-button {
   min-height: 1.2em;
 }
 
+/* Ensure dropdown and calendar popups overflow above table rows */
+:host ::ng-deep .p-dropdown-panel,
+:host ::ng-deep .p-multiselect-panel,
+:host ::ng-deep .calendar-popup-fix .p-datepicker {
+  z-index: 99999 !important;
+  position: absolute !important;
+}
+
+:host ::ng-deep .p-dropdown-panel,
+:host ::ng-deep .p-multiselect-panel {
+  min-width: 220px !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+}
+
+/* Ensure all table containers allow overflow for popups */
+.contact-table-container,
+:host ::ng-deep .p-table,
+:host ::ng-deep .p-datatable-wrapper {
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Optionally, increase min-width for calendar popup */
+:host ::ng-deep .calendar-popup-fix .p-datepicker {
+  min-width: 320px !important;
+}
+
+/* Make sure table rows allow overflow for popups */
+.contact-table-container {
+  overflow: visible !important;
+}
+
 @media (max-width: 500px) {
   ::ng-deep .p-dialog {
     width: 95vw !important;
