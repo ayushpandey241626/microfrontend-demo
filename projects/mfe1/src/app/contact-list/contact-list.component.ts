@@ -63,6 +63,17 @@ export class ContactListComponent {
   // For p-calendar (Date filter)
   selectedDateRange: Date[] = [];
 
+  // For Add Contact Dialog
+  showAddContactDialog = false;
+  newContact: Partial<Contact> = {
+    name: '',
+    email: '',
+    phone: '',
+    group: undefined,
+    tags: [],
+    dateAdded: undefined,
+  };
+
   constructor(private contactService: ContactService) {}
 
   ngOnInit() {
@@ -180,5 +191,52 @@ export class ContactListComponent {
       }
       return true;
     });
+  }
+
+  onAddContactSubmit() {
+    // Generate new id
+    const newId =
+      this.contacts.length > 0
+        ? Math.max(...this.contacts.map((c) => c.id)) + 1
+        : 1;
+    const contact: Contact = {
+      id: newId,
+      name: this.newContact.name ?? '',
+      email: this.newContact.email ?? '',
+      phone: this.newContact.phone ?? '',
+      group: this.newContact.group ?? '',
+      tags: this.newContact.tags ?? [],
+      dateAdded: this.newContact.dateAdded
+        ? new Date(this.newContact.dateAdded)
+        : new Date(),
+    };
+    this.contacts.push(contact);
+
+    // Update groupOptions and tagOptions if new values are added
+    if (
+      contact.group &&
+      !this.groupOptions.some((g) => g.value === contact.group)
+    ) {
+      this.groupOptions.push({ label: contact.group, value: contact.group });
+    }
+    contact.tags.forEach((tag) => {
+      if (tag && !this.tagOptions.some((t) => t.value === tag)) {
+        this.tagOptions.push({ label: tag, value: tag });
+      }
+    });
+
+    this.applyAllFilters();
+    this.showAddContactDialog = false;
+    this.newContact = {
+      name: '',
+      email: '',
+      phone: '',
+      group: undefined,
+      tags: [],
+      dateAdded: undefined,
+    };
+  }
+  filteredGroupOptions() {
+    return this.groupOptions?.filter((g) => g && g.value !== null) || [];
   }
 }

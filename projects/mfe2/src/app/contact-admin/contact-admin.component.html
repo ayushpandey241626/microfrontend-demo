@@ -1,19 +1,102 @@
-<div class="p-p-4 card">
-  <h2>Contact Administration</h2>
-  <div class="p-fluid">
-    <div class="p-field">
-      <label for="name">Name</label>
-      <input id="name" type="text" pInputText [(ngModel)]="newContact.name" />
+<div class="admin-container">
+  <div class="form-panel">
+    <h2>Create New Announcement</h2>
+    <form [formGroup]="announcementForm" (ngSubmit)="addAnnouncement()">
+      <div class="field">
+        <label for="title">Title</label>
+        <input
+          pInputText
+          id="title"
+          formControlName="title"
+          placeholder="Enter announcement title"
+        />
+        <small
+          class="error"
+          *ngIf="
+            announcementForm.get('title')?.touched &&
+            announcementForm.get('title')?.invalid
+          "
+          >Title is required (min 3 chars).</small
+        >
+      </div>
+
+      <div class="field">
+        <label for="message">Message</label>
+        <textarea
+          pInputTextarea
+          id="message"
+          formControlName="message"
+          rows="4"
+          autoResize="true"
+          placeholder="Enter announcement message"
+        ></textarea>
+        <small
+          class="error"
+          *ngIf="
+            announcementForm.get('message')?.touched &&
+            announcementForm.get('message')?.invalid
+          "
+          >Message is required (min 5 chars).</small
+        >
+      </div>
+
+      <div class="field">
+        <label for="publishDate">Publish Date</label>
+        <p-calendar
+          id="publishDate"
+          formControlName="publishDate"
+          dateFormat="yy-mm-dd"
+          showIcon="true"
+          placeholder="Select publish date"
+        ></p-calendar>
+        <small
+          class="error"
+          *ngIf="
+            announcementForm.get('publishDate')?.touched &&
+            announcementForm.get('publishDate')?.invalid
+          "
+          >Publish Date is required.</small
+        >
+      </div>
+
+      <button
+        pButton
+        type="submit"
+        label="Add Announcement"
+        icon="pi pi-plus"
+        class="add-button"
+      ></button>
+    </form>
+  </div>
+
+  <div class="cards-panel">
+    <h2>Existing Announcements</h2>
+    <div *ngIf="announcements.length === 0" class="no-anns">
+      No announcements yet.
     </div>
-    <div class="p-field">
-      <label for="email">Email</label>
-      <input
-        id="email"
-        type="email"
-        pInputText
-        [(ngModel)]="newContact.email"
-      />
+    <div class="cards-container">
+      <p-card
+        *ngFor="let ann of announcements"
+        [style]="{ 'margin-bottom': '1rem' }"
+        class="ann-card"
+      >
+        <ng-template pTemplate="title">
+          <div class="ann-title">{{ ann.title }}</div>
+        </ng-template>
+        <ng-template pTemplate="subtitle">
+          <div class="ann-date">
+            {{ ann.publishDate | date : "yyyy-MM-dd" }}
+          </div>
+        </ng-template>
+        <div class="ann-message">{{ ann.message }}</div>
+        <button
+          pButton
+          type="button"
+          icon="pi pi-trash"
+          class="remove-button"
+          (click)="removeAnnouncement(ann.id)"
+        ></button>
+      </p-card>
     </div>
-    <button pButton label="Add Contact" (click)="addContact()"></button>
   </div>
 </div>

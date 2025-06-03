@@ -59,3 +59,107 @@
 .p-table .p-empty-message {
   text-align: center;
 }
+
+/* Style for the Add Contact Dialog */
+::ng-deep .p-dialog .p-dialog-content {
+  padding: 2rem 2rem 1rem 2rem;
+  background: #f9f9fb;
+}
+
+::ng-deep .p-dialog .p-dialog-header {
+  background: #3f51b5;
+  color: #fff;
+  font-weight: 600;
+  padding: 1.2rem 2rem;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+}
+
+::ng-deep .p-dialog .p-dialog-footer {
+  background: transparent;
+  border-top: none;
+  padding: 1rem 2rem 1.5rem 2rem;
+}
+
+.p-fluid .p-field {
+  margin-bottom: 1.2rem;
+}
+
+.p-field label {
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  color: #333;
+  display: block;
+}
+
+.p-field input,
+.p-field .p-dropdown,
+.p-field .p-multiselect,
+.p-field .p-calendar {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #cfd8dc;
+  background: #fff;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.p-field input:focus,
+.p-field .p-dropdown:focus,
+.p-field .p-multiselect:focus,
+.p-field .p-calendar:focus {
+  border-color: #3f51b5;
+  box-shadow: 0 0 0 2px #3f51b540;
+}
+
+.p-dialog .p-button,
+.p-dialog-footer .p-button,
+.p-dialog .p-button-text,
+.p-dialog-footer .p-button-text,
+.p-button {
+  min-width: 80px;
+  padding: 0.35rem 1.1rem;
+  font-size: 0.98rem;
+  border-radius: 5px;
+  line-height: 1.2;
+}
+
+.p-dialog .p-button,
+.p-dialog-footer .p-button {
+  margin-left: 0.3rem;
+}
+
+.p-button .pi {
+  font-size: 1rem;
+  margin-right: 0.3rem;
+}
+
+div[style*="margin-bottom: 1rem"] .p-button {
+  font-size: 1rem;
+  padding: 0.4rem 1.2rem;
+  min-width: 120px;
+}
+
+/* Form validation error messages */
+.form-error {
+  color: #e53935;
+  font-size: 0.92em;
+  margin-top: 0.2rem;
+  margin-bottom: -0.7rem;
+  min-height: 1.2em;
+}
+
+@media (max-width: 500px) {
+  ::ng-deep .p-dialog {
+    width: 95vw !important;
+    min-width: unset !important;
+    padding: 0 !important;
+  }
+  ::ng-deep .p-dialog .p-dialog-content,
+  ::ng-deep .p-dialog .p-dialog-header,
+  ::ng-deep .p-dialog .p-dialog-footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

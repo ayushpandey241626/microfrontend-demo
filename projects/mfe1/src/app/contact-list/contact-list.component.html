@@ -55,8 +55,136 @@
   </div>
 </div>
 
+<!-- Add Contact Button -->
+<div style="margin-bottom: 1rem">
+  <p-button
+    pButton
+    type="button"
+    label="Add a contact"
+    icon="pi pi-plus"
+    styleClass="p-button-sm"
+    (click)="showAddContactDialog = true"
+  />
+</div>
+
+<!-- Add Contact Dialog -->
+<p-dialog
+  header="Add Contact"
+  [(visible)]="showAddContactDialog"
+  [modal]="true"
+  [closable]="false"
+  [style]="{ width: '400px' }"
+>
+  <form #addContactForm="ngForm" (ngSubmit)="onAddContactSubmit()">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="addName">Name</label>
+        <input
+          id="addName"
+          type="text"
+          pInputText
+          [(ngModel)]="newContact.name"
+          name="name"
+          required
+          #nameCtrl="ngModel"
+        />
+        <div class="form-error" *ngIf="nameCtrl.invalid && nameCtrl.touched">
+          Name is required.
+        </div>
+      </div>
+      <div class="p-field">
+        <label for="addEmail">Email</label>
+        <input
+          id="addEmail"
+          type="email"
+          pInputText
+          [(ngModel)]="newContact.email"
+          name="email"
+          required
+          email
+          #emailCtrl="ngModel"
+        />
+        <div class="form-error" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+          <span *ngIf="emailCtrl.errors?.['required']">Email is required.</span>
+          <span *ngIf="emailCtrl.errors?.['email']">Invalid email format.</span>
+        </div>
+      </div>
+      <div class="p-field">
+        <label for="addPhone">Phone</label>
+        <input
+          id="addPhone"
+          type="text"
+          pInputText
+          [(ngModel)]="newContact.phone"
+          name="phone"
+          required
+          pattern="^(\+?\d{1,3}[- ]?)?\d{10}$"
+          #phoneCtrl="ngModel"
+        />
+        <div class="form-error" *ngIf="phoneCtrl.invalid && phoneCtrl.touched">
+          <span *ngIf="phoneCtrl.errors?.['required']">Phone is required.</span>
+          <span *ngIf="phoneCtrl.errors?.['pattern']"
+            >Invalid phone number. Enter 10 digits, optionally with country
+            code.</span
+          >
+        </div>
+      </div>
+      <div class="p-field">
+        <label for="addGroup">Group</label>
+        <p-dropdown
+          inputId="addGroup"
+          [options]="filteredGroupOptions()"
+          [(ngModel)]="newContact.group"
+          name="group"
+          placeholder="Select Group"
+          required
+        ></p-dropdown>
+      </div>
+      <div class="p-field">
+        <label for="addTags">Tags</label>
+        <p-multiselect
+          inputId="addTags"
+          [options]="tagOptions"
+          [(ngModel)]="newContact.tags"
+          name="tags"
+          placeholder="Select Tags"
+          display="chip"
+        ></p-multiselect>
+      </div>
+      <div class="p-field">
+        <label for="addDate">Date Added</label>
+        <p-calendar
+          inputId="addDate"
+          [(ngModel)]="newContact.dateAdded"
+          name="dateAdded"
+          dateFormat="yy-mm-dd"
+          [showTime]="true"
+          required
+        ></p-calendar>
+      </div>
+    </div>
+    <div class="p-dialog-footer" style="text-align: right">
+      <p-button
+        pButton
+        type="button"
+        label="Cancel"
+        styleClass="p-button-sm"
+        (click)="showAddContactDialog = false"
+      />
+      <p-button
+        pButton
+        type="submit"
+        label="Submit"
+        styleClass="p-button-sm"
+        [disabled]="!addContactForm.form.valid"
+      />
+    </div>
+  </form>
+</p-dialog>
+
 <div class="contact-table-container">
   <p-table
+    editMode="row"
     [value]="filteredContacts"
     paginator="true"
     [rows]="10"
@@ -68,13 +196,20 @@
       { field: 'phone', header: 'Phone' },
       { field: 'group', header: 'Group' },
       { field: 'tags', header: 'Tags' },
-      { field: 'dateAdded', header: 'Date Added' }
+      { field: 'dateAdded', header: 'Date Added' },
+      { field: 'actions', header: 'Actions' }
     ]"
+    [sortMode]="'multiple'"
   >
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th *ngFor="let col of columns" pResizableColumn>
+        <th
+          *ngFor="let col of columns"
+          pResizableColumn
+          pSortableColumn="{{ col.field }}"
+        >
           {{ col.header }}
+          <p-sortIcon [field]="col.field"></p-sortIcon>
         </th>
       </tr>
     </ng-template>
