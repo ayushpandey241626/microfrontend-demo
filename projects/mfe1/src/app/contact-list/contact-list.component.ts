@@ -16,6 +16,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { BehaviorSubject } from 'rxjs';
 
 interface Contact {
   id: number;
@@ -53,6 +54,7 @@ interface Contact {
 })
 export class ContactListComponent {
   // For p-table
+  private contactsSubject = new BehaviorSubject<Contact[]>([]);
   contacts: Contact[] = [];
   filteredContacts: Contact[] = [];
 
@@ -93,47 +95,62 @@ export class ContactListComponent {
   ) {}
 
   ngOnInit() {
-    // Populate with some mock contacts (in real app, fetch from API)
-    this.contacts = [
-      {
-        id: 1,
-        name: 'Alice Johnson',
-        email: 'alice@example.com',
-        phone: '+1 555-1234',
-        group: 'Friends',
-        tags: ['VIP', 'Newsletter'],
-        dateAdded: new Date(2025, 0, 15),
-      },
-      {
-        id: 2,
-        name: 'Bob Smith',
-        email: 'bob@example.com',
-        phone: '+1 555-5678',
-        group: 'Family',
-        tags: ['Urgent'],
-        dateAdded: new Date(2025, 1, 10),
-      },
-      {
-        id: 3,
-        name: 'Charlie Brown',
-        email: 'charlie@example.com',
-        phone: '+1 555-9012',
-        group: 'Work',
-        tags: ['Newsletter'],
-        dateAdded: new Date(2025, 2, 5),
-      },
-      // …add as many as needed
-    ];
-    this.filteredContacts = [...this.contacts];
+    // Load contacts from localStorage if available
+    const stored = localStorage.getItem('contacts');
+    let initialContacts: Contact[];
+    if (stored) {
+      initialContacts = JSON.parse(stored).map((c: any) => ({
+        ...c,
+        dateAdded: new Date(c.dateAdded),
+      }));
+    } else {
+      initialContacts = [
+        {
+          id: 1,
+          name: 'Alice Johnson',
+          email: 'alice@example.com',
+          phone: '+1 555-1234',
+          group: 'Friends',
+          tags: ['VIP', 'Newsletter'],
+          dateAdded: new Date(2025, 0, 15),
+        },
+        {
+          id: 2,
+          name: 'Bob Smith',
+          email: 'bob@example.com',
+          phone: '+1 555-5678',
+          group: 'Family',
+          tags: ['Urgent'],
+          dateAdded: new Date(2025, 1, 10),
+        },
+        {
+          id: 3,
+          name: 'Charlie Brown',
+          email: 'charlie@example.com',
+          phone: '+1 555-9012',
+          group: 'Work',
+          tags: ['Newsletter'],
+          dateAdded: new Date(2025, 2, 5),
+        },
+        // …add as many as needed
+      ];
+    }
+    this.contactsSubject.next(initialContacts);
 
-    // Group options
-    const groups = Array.from(new Set(this.contacts.map((c) => c.group)));
-    this.groupOptions = groups.map((g) => ({ label: g, value: g }));
-    this.groupOptions.unshift({ label: 'All Groups', value: null });
-
-    // Tag options
-    const tags = Array.from(new Set(this.contacts.flatMap((c) => c.tags)));
-    this.tagOptions = tags.map((t) => ({ label: t, value: t }));
+    // Subscribe to contacts changes
+    this.contactsSubject.subscribe((contacts) => {
+      this.contacts = contacts;
+      this.filteredContacts = [...contacts];
+      // Update group and tag options
+      const groups = Array.from(new Set(contacts.map((c) => c.group)));
+      this.groupOptions = groups.map((g) => ({ label: g, value: g }));
+      this.groupOptions.unshift({ label: 'All Groups', value: null });
+      const tags = Array.from(new Set(contacts.flatMap((c) => c.tags)));
+      this.tagOptions = tags.map((t) => ({ label: t, value: t }));
+      this.applyAllFilters();
+      // Save to localStorage
+      localStorage.setItem('contacts', JSON.stringify(contacts));
+    });
 
     // Subscribe to nameControl value changes for autocomplete suggestions
     this.nameControl.valueChanges.subscribe((value) => {
@@ -241,22 +258,8 @@ export class ContactListComponent {
         ? new Date(this.newContact.dateAdded)
         : new Date(),
     };
-    this.contacts.push(contact);
-
-    // Update groupOptions and tagOptions if new values are added
-    if (
-      contact.group &&
-      !this.groupOptions.some((g) => g.value === contact.group)
-    ) {
-      this.groupOptions.push({ label: contact.group, value: contact.group });
-    }
-    contact.tags.forEach((tag) => {
-      if (tag && !this.tagOptions.some((t) => t.value === tag)) {
-        this.tagOptions.push({ label: tag, value: tag });
-      }
-    });
-
-    this.applyAllFilters();
+    // Add to contacts via subject
+    this.contactsSubject.next([...this.contacts, contact]);
     this.showAddContactDialog = false;
     this.newContact = {
       name: '',
@@ -321,8 +324,8 @@ export class ContactListComponent {
       header: 'Confirm Delete',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.contacts = this.contacts.filter((c) => c.id !== rowData.id);
-        this.applyAllFilters();
+        // Remove from contacts via subject
+        this.contactsSubject.next(this.contacts.filter((c) => c.id !== rowData.id));
         this.messageService.add({
           severity: 'success',
           summary: 'Contact Deleted',

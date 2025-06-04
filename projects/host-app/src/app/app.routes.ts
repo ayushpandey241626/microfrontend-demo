@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { loadRemoteModule } from '@angular-architects/module-federation';
+import { NotFoundComponent } from './not-found.component';
 
 export const routes: Routes = [
   /*  {
@@ -25,5 +26,9 @@ export const routes: Routes = [
         exposedModule: './AdminModule',
         remoteEntry: 'http://localhost:4202/remoteEntry.js',
       }).then((m) => m.default),
+  },
+  {
+    path: '**',
+    component: NotFoundComponent,
   },
 ];
