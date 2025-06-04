@@ -4,11 +4,11 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
 import { NotFoundComponent } from './not-found.component';
 
 export const routes: Routes = [
-  /*  {
+  {
     path: '',
-    redirectTo: 'contacts',
+    redirectTo: 'login',
     pathMatch: 'full',
-  }, */
+  },
   {
     path: 'contacts',
     loadChildren: () =>

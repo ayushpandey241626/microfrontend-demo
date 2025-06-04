@@ -35,10 +35,12 @@ export class AppComponent {
   homeRoute = '/';
   cities: { name: string; code: string }[] | undefined;
   isHome = false;
+  isLogin = false;
 
   constructor(private router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
+        this.isLogin = event.urlAfterRedirects === '/login';
         this.isHome = this.router.url === '/';
       }
     });
@@ -59,5 +61,9 @@ export class AppComponent {
   }
   goHome() {
     this.router.navigate([this.homeRoute]);
+  }
+  logout() {
+    // Optionally clear any auth state here
+    this.router.navigate(['/login']);
   }
 }

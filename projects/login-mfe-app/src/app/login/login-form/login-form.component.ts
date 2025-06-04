@@ -7,40 +7,52 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
+import { ButtonModule } from 'primeng/button';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-login-form',
-  imports: [ReactiveFormsModule, FormsModule, CommonModule],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
+    InputTextModule,
+    PasswordModule,
+    ButtonModule,
+    MessageModule,
+  ],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss',
 })
 export class LoginFormComponent {
-  loginForm!: FormGroup;
-  submitted = false;
+  loginForm: FormGroup;
+  loginError: string | null = null;
 
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    // Reactive form with username & password
+  constructor(private fb: FormBuilder, private router: Router) {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
     });
   }
 
-  // convenience getter for easy access to form fields
-  get f() {
-    return this.loginForm.controls;
-  }
+  ngOnInit(): void {}
 
-  onSubmit(): void {
-    this.submitted = true;
-    if (this.loginForm.invalid) {
-      return;
+  onSubmit() {
+    if (this.loginForm.valid) {
+      const { username, password } = this.loginForm.value;
+      // Simple demo logic: accept any non-empty username/password
+      if (username && password) {
+        this.loginError = null;
+        this.router.navigate(['/contacts']);
+      } else {
+        this.loginError = 'Invalid username or password';
+      }
+    } else {
+      this.loginError = 'Please fill in all fields';
     }
-    // Normally you’d call your authentication service here.
-    alert(
-      `Login attempted:\nUsername: ${this.f['username'].value}\nPassword: ${this.f['password'].value}`
-    );
   }
 }
