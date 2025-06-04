@@ -9,12 +9,10 @@
         pInputText
         formControlName="username"
         autocomplete="username"
+        [ngClass]="{'ng-invalid ng-dirty': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}"
       />
       <div
-        *ngIf="
-          loginForm.get('username')?.invalid &&
-          loginForm.get('username')?.touched
-        "
+        *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
         class="error"
       >
         Username is required
@@ -22,18 +20,15 @@
     </div>
     <div class="p-field">
       <label for="password">Password</label>
-      <input
+      <p-password
         id="password"
-        type="password"
-        pPassword
         formControlName="password"
         autocomplete="current-password"
-      />
+        [feedback]="false"
+        [ngClass]="{'ng-invalid ng-dirty': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
+      ></p-password>
       <div
-        *ngIf="
-          loginForm.get('password')?.invalid &&
-          loginForm.get('password')?.touched
-        "
+        *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
         class="error"
       >
         Password is required
@@ -44,6 +39,7 @@
       type="submit"
       label="Login"
       [disabled]="loginForm.invalid"
+      class="p-mt-2"
     ></button>
     <p-message
       *ngIf="loginError"
