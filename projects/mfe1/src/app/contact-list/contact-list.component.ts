@@ -143,11 +143,18 @@ export class ContactListComponent {
   }
 
   filterNameSuggestions(query: any) {
-    if (!query || query.trim().length === 0) {
+    // Accept both string and event object from p-autocomplete
+    let search = '';
+    if (typeof query === 'string') {
+      search = query;
+    } else if (query && typeof query.query === 'string') {
+      search = query.query;
+    }
+    if (!search || search.trim().length === 0) {
       this.nameSuggestions = [];
       return;
     }
-    const lower = query.toLowerCase();
+    const lower = search.toLowerCase();
     this.nameSuggestions = this.contacts
       .map((c) => c.name)
       .filter((name) => name.toLowerCase().includes(lower))
