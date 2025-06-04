@@ -309,14 +309,16 @@
         </td>
         <td>
           <ng-container *ngIf="!editingRows[rowData.id]">
-            <!-- <button
+            <button
               pButton
               type="button"
-              icon="pi pi-pencil"
-              class="p-button-text p-button-sm"
-              (click)="onRowEditInit(rowData)"
-              style="margin-right: 0.5rem"
-            ></button> -->
+              icon="pi pi-eye"
+              class="p-button-text p-button-sm p-button-info"
+              pTooltip="View Contact"
+              tooltipPosition="top"
+              (click)="onViewContact(rowData)"
+              style="margin-right: 0.3rem"
+            ></button>
             <button
               pButton
               type="button"
@@ -356,6 +358,53 @@
 <!-- Delete Confirmation Dialog -->
 <p-confirmDialog></p-confirmDialog>
 <p-toast></p-toast>
+
+<!-- View Contact Dialog -->
+<p-dialog
+  header="Contact Details"
+  [(visible)]="showViewDialog"
+  [modal]="true"
+  [draggable]="true"
+  [closable]="true"
+  [style]="{ width: '350px', 'border-radius': '12px' }"
+  [contentStyle]="{ padding: '0' }"
+  [baseZIndex]="1100"
+  (onHide)="viewContact = null"
+>
+  <ng-container *ngIf="viewContact">
+    <div class="view-contact-card">
+      <div class="view-contact-header">
+        <span class="pi pi-user" style="font-size: 2rem; color: #3f51b5"></span>
+        <div>
+          <div class="view-contact-name">{{ viewContact.name }}</div>
+          <div class="view-contact-group">{{ viewContact.group }}</div>
+        </div>
+      </div>
+      <div class="view-contact-info">
+        <div>
+          <span class="pi pi-envelope"></span>
+          <span>{{ viewContact.email }}</span>
+        </div>
+        <div>
+          <span class="pi pi-phone"></span>
+          <span>{{ viewContact.phone }}</span>
+        </div>
+        <div>
+          <span class="pi pi-calendar"></span>
+          <span>{{ viewContact.dateAdded | date : "yyyy-MM-dd HH:mm" }}</span>
+        </div>
+        <div *ngIf="viewContact.tags?.length">
+          <span class="pi pi-tags"></span>
+          <span>
+            <ng-container *ngFor="let tag of viewContact.tags; let i = index">
+              <span class="p-chip p-chip-info view-chip">{{ tag }}</span>
+            </ng-container>
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</p-dialog>
 
 <style>
   /* Add this style block at the end of your HTML file */

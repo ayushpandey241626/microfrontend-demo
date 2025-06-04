@@ -84,6 +84,10 @@ export class ContactListComponent {
     dateAdded: undefined,
   };
 
+  // For View Contact Dialog
+  showViewDialog = false;
+  viewContact: Contact | null = null;
+
   // For row editing
   editingRows: { [key: number]: boolean } = {};
   originalRowData: { [key: number]: Contact } = {};
@@ -325,7 +329,9 @@ export class ContactListComponent {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         // Remove from contacts via subject
-        this.contactsSubject.next(this.contacts.filter((c) => c.id !== rowData.id));
+        this.contactsSubject.next(
+          this.contacts.filter((c) => c.id !== rowData.id)
+        );
         this.messageService.add({
           severity: 'success',
           summary: 'Contact Deleted',
@@ -333,5 +339,10 @@ export class ContactListComponent {
         });
       },
     });
+  }
+
+  onViewContact(contact: Contact) {
+    this.viewContact = contact;
+    this.showViewDialog = true;
   }
 }
