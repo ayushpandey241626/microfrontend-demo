@@ -28,6 +28,15 @@ export const routes: Routes = [
       }).then((m) => m.default),
   },
   {
+    path: 'login',
+    loadChildren: () =>
+      loadRemoteModule({
+        type: 'module',
+        exposedModule: './LoginModule',
+        remoteEntry: 'http://localhost:4203/remoteEntry.js',
+      }).then((m) => m.default),
+  },
+  {
     path: '**',
     component: NotFoundComponent,
   },
