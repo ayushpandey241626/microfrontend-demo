@@ -183,7 +183,7 @@ export class ContactListComponent {
   }
 
   onSelectNameSuggestion(name: any) {
-    this.nameControl.setValue(name);
+    this.nameControl.setValue(name.value);
     this.applyAllFilters();
   }
 

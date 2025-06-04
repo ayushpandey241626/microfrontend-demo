@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { MenubarModule } from 'primeng/menubar';
 
@@ -14,9 +15,11 @@ import { MenubarModule } from 'primeng/menubar';
     MenubarModule,
     ButtonModule,
     CommonModule,
+    ConfirmDialogModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
+  providers: [ConfirmationService],
 })
 export class AppComponent {
   items: MenuItem[] = [
@@ -37,7 +40,10 @@ export class AppComponent {
   isHome = false;
   isLogin = false;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private confirmationService: ConfirmationService
+  ) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.isLogin = event.urlAfterRedirects === '/login';
@@ -65,5 +71,16 @@ export class AppComponent {
   logout() {
     // Optionally clear any auth state here
     this.router.navigate(['/login']);
+  }
+
+  confirmLogout() {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to logout?',
+      header: 'Confirm Logout',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.logout();
+      },
+    });
   }
 }
