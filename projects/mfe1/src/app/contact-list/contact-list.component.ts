@@ -79,6 +79,8 @@ export class ContactListComponent implements OnInit {
 
   // For Add Contact Dialog
   showAddContactDialog = false;
+  isEditMode = false;
+  editContactId: string | null = null;
   newContact: Partial<Contact> = {
     name: '',
     email: '',
@@ -405,35 +407,72 @@ export class ContactListComponent implements OnInit {
     });
   }
 
-  onAddContactSubmit() {
-    // Generate new id
-    const newId =
-      this.contacts.length > 0
-        ? Math.max(...this.contacts.map((c) => c.id)) + 1
-        : 1;
-    const contact: Contact = {
-      id: newId,
-      name: this.newContact.name ?? '',
-      email: this.newContact.email ?? '',
-      phone: this.newContact.phone ?? '',
-      group: this.newContact.group ?? '',
-      tags: this.newContact.tags ?? [],
-      dateAdded: this.newContact.dateAdded
-        ? new Date(this.newContact.dateAdded)
-        : new Date(),
-    };
-    // Add to contacts via subject
-    this.contactsSubject.next([...this.contacts, contact]);
-    this.showAddContactDialog = false;
+  openAddContactDialog() {
+    this.isEditMode = false;
+    this.editContactId = null;
     this.newContact = {
       name: '',
       email: '',
       phone: '',
-      group: undefined,
+      group: '',
       tags: [],
       dateAdded: undefined,
     };
+    this.showAddContactDialog = true;
   }
+
+  onEditContact(contact: any) {
+    this.isEditMode = true;
+    this.editContactId = contact.id;
+    this.newContact = { ...contact }; // shallow copy for editing
+    this.showAddContactDialog = true;
+  }
+
+  onAddContactSubmit() {
+    if (this.isEditMode && this.editContactId !== null) {
+      // Update existing contact
+      const idx = this.contacts.findIndex(
+        (c) => c.id === Number(this.editContactId)
+      );
+      if (idx > -1) {
+        this.contacts[idx] = {
+          id: Number(this.editContactId),
+          name: this.newContact.name ?? '',
+          email: this.newContact.email ?? '',
+          phone: this.newContact.phone ?? '',
+          group: this.newContact.group ?? '',
+          tags: this.newContact.tags ?? [],
+          dateAdded: this.newContact.dateAdded ?? new Date(),
+        };
+        this.contactsSubject.next([...this.contacts]); // <-- trigger update
+      }
+    } else {
+      // Add new contact
+      const newId = this.generateNumericId();
+      this.contacts.push({
+        id: newId,
+        name: this.newContact.name ?? '',
+        email: this.newContact.email ?? '',
+        phone: this.newContact.phone ?? '',
+        group: this.newContact.group ?? '',
+        tags: this.newContact.tags ?? [],
+        dateAdded: this.newContact.dateAdded ?? new Date(),
+      });
+      this.contactsSubject.next([...this.contacts]); // <-- trigger update
+    }
+    this.showAddContactDialog = false;
+    this.isEditMode = false;
+    this.editContactId = null;
+    // ...refresh/filter contacts as needed...
+  }
+
+  generateNumericId() {
+    // Find max id and increment, fallback to 1 if empty
+    return this.contacts.length > 0
+      ? Math.max(...this.contacts.map(c => c.id)) + 1
+      : 1;
+  }
+
   filteredGroupOptions() {
     return this.groupOptions?.filter((g) => g && g.value !== null) || [];
   }

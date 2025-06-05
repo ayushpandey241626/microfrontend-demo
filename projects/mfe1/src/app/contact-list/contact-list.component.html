@@ -58,21 +58,21 @@
   </div>
 </div>
 
-<!-- Add Contact Button -->
+<!-- Add/Edit Contact Button -->
 <div style="margin-bottom: 1rem">
   <p-button
     pButton
     type="button"
-    label="Add a contact"
+    [label]="isEditMode ? 'Edit contact' : 'Add a contact'"
     icon="pi pi-plus"
     styleClass="p-button-sm"
-    (click)="showAddContactDialog = true"
+    (click)="openAddContactDialog()"
   />
 </div>
 
-<!-- Add Contact Dialog -->
+<!-- Add/Edit Contact Dialog -->
 <p-dialog
-  header="Add Contact"
+  [header]="isEditMode ? 'Edit Contact' : 'Add Contact'"
   [(visible)]="showAddContactDialog"
   [modal]="true"
   [closable]="false"
@@ -182,7 +182,7 @@
       <p-button
         pButton
         type="submit"
-        label="Submit"
+        [label]="isEditMode ? 'Update' : 'Submit'"
         styleClass="p-button-sm"
         [disabled]="!addContactForm.form.valid"
       />
@@ -192,7 +192,6 @@
 
 <div class="contact-table-container">
   <p-table
-    editMode="row"
     [value]="filteredContacts"
     paginator="true"
     [rows]="10"
@@ -235,128 +234,58 @@
       let-columns="columns"
       let-rowIndex="rowIndex"
     >
-      <tr [pEditableRow]="editingRows[rowData.id] ? rowData : null">
-        <td [pEditableColumn]="editingRows[rowData.id]">
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input pInputText [(ngModel)]="rowData.name" required />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ rowData.name }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td [pEditableColumn]="editingRows[rowData.id]">
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input pInputText [(ngModel)]="rowData.email" required />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ rowData.email }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td [pEditableColumn]="editingRows[rowData.id]">
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input pInputText [(ngModel)]="rowData.phone" required />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ rowData.phone }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td [pEditableColumn]="editingRows[rowData.id]">
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <p-select
-                [options]="filteredGroupOptions()"
-                [(ngModel)]="rowData.group"
-                [style]="{ width: '100%' }"
-                placeholder="Select Group"
-                appendTo="body"
-              ></p-select>
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ rowData.group }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td [pEditableColumn]="editingRows[rowData.id]">
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <p-multiselect
-                [options]="tagOptions"
-                [(ngModel)]="rowData.tags"
-                display="chip"
-                [style]="{ width: '100%' }"
-                appendTo="body"
-              ></p-multiselect>
-            </ng-template>
-            <ng-template pTemplate="output">
-              <ng-container *ngFor="let t of rowData.tags; let i = index">
-                <span class="tag-chip">{{ t }}</span
-                ><ng-container *ngIf="i < rowData.tags.length - 1"
-                  >,
-                </ng-container>
-              </ng-container>
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td [pEditableColumn]="editingRows[rowData.id]">
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <p-datePicker
-                [(ngModel)]="rowData.dateAdded"
-                dateFormat="yy-mm-dd"
-                [showTime]="true"
-                [style]="{ width: '100%' }"
-                panelStyleClass="calendar-popup-fix"
-                appendTo="body"
-              ></p-datePicker>
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ rowData.dateAdded | date : "yyyy-MM-dd HH:mm" }}
-            </ng-template>
-          </p-cellEditor>
+      <tr>
+        <td>
+          {{ rowData.name }}
         </td>
         <td>
-          <ng-container *ngIf="!editingRows[rowData.id]">
-            <button
-              pButton
-              type="button"
-              icon="pi pi-eye"
-              class="p-button-text p-button-sm p-button-info"
-              pTooltip="View Contact"
-              tooltipPosition="top"
-              (click)="onViewContact(rowData)"
-              style="margin-right: 0.3rem"
-            ></button>
-            <button
-              pButton
-              type="button"
-              icon="pi pi-trash"
-              class="p-button-text p-button-sm p-button-danger"
-              (click)="onDeleteContact(rowData)"
-            ></button>
+          {{ rowData.email }}
+        </td>
+        <td>
+          {{ rowData.phone }}
+        </td>
+        <td>
+          {{ rowData.group }}
+        </td>
+        <td>
+          <ng-container *ngFor="let t of rowData.tags; let i = index">
+            <span class="tag-chip">{{ t }}</span
+            ><ng-container *ngIf="i < rowData.tags.length - 1"
+              >,
+            </ng-container>
           </ng-container>
-          <ng-container *ngIf="editingRows[rowData.id]">
-            <button
-              pButton
-              type="button"
-              icon="pi pi-check"
-              class="p-button-text p-button-sm"
-              (click)="onRowEditSave(rowData)"
-              style="margin-right: 0.5rem"
-            ></button>
-            <button
-              pButton
-              type="button"
-              icon="pi pi-times"
-              class="p-button-text p-button-sm"
-              (click)="onRowEditCancel(rowData, rowIndex)"
-            ></button>
-          </ng-container>
+        </td>
+        <td>
+          {{ rowData.dateAdded | date : "yyyy-MM-dd HH:mm" }}
+        </td>
+        <td>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-eye"
+            class="p-button-text p-button-sm p-button-info"
+            pTooltip="View Contact"
+            tooltipPosition="top"
+            (click)="onViewContact(rowData)"
+            style="margin-right: 0.3rem"
+          ></button>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-trash"
+            class="p-button-text p-button-sm p-button-danger"
+            (click)="onDeleteContact(rowData)"
+          ></button>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-pencil"
+            class="p-button-text p-button-sm p-button-warning"
+            pTooltip="Edit Contact"
+            tooltipPosition="top"
+            (click)="onEditContact(rowData)"
+            style="margin-right: 0.3rem"
+          ></button>
         </td>
       </tr>
     </ng-template>
