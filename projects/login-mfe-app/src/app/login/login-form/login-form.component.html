@@ -1,3 +1,4 @@
+<p-toast position="top-right"></p-toast>
 <div class="login-container">
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
     <h2>Login</h2>
@@ -9,10 +10,17 @@
         pInputText
         formControlName="username"
         autocomplete="username"
-        [ngClass]="{'ng-invalid ng-dirty': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            loginForm.get('username')?.invalid &&
+            loginForm.get('username')?.touched
+        }"
       />
       <div
-        *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+        *ngIf="
+          loginForm.get('username')?.invalid &&
+          loginForm.get('username')?.touched
+        "
         class="error"
       >
         Username is required
@@ -25,10 +33,18 @@
         formControlName="password"
         autocomplete="current-password"
         [feedback]="false"
-        [ngClass]="{'ng-invalid ng-dirty': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
+        [toggleMask]="true"
+        [ngClass]="{
+          'ng-invalid ng-dirty':
+            loginForm.get('password')?.invalid &&
+            loginForm.get('password')?.touched
+        }"
       ></p-password>
       <div
-        *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+        *ngIf="
+          loginForm.get('password')?.invalid &&
+          loginForm.get('password')?.touched
+        "
         class="error"
       >
         Password is required

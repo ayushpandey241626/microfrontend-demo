@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ContactService } from '../contact.service';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -16,7 +16,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
-import { BehaviorSubject } from 'rxjs';
+import { DatePickerModule } from 'primeng/datepicker';
+import { BehaviorSubject, forkJoin } from 'rxjs';
+import { SelectModule } from 'primeng/select';
 
 interface Contact {
   id: number;
@@ -32,8 +34,10 @@ interface Contact {
   imports: [
     TableModule,
     ConfirmDialogModule,
+    SelectModule,
     MessageModule,
     ButtonModule,
+    DatePickerModule,
     DialogModule,
     InputTextModule,
     DropdownModule,
@@ -52,7 +56,7 @@ interface Contact {
   styleUrl: './contact-list.component.css',
   providers: [ConfirmationService, MessageService],
 })
-export class ContactListComponent {
+export class ContactListComponent implements OnInit {
   // For p-table
   private contactsSubject = new BehaviorSubject<Contact[]>([]);
   contacts: Contact[] = [];
