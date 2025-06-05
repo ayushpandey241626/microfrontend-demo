@@ -463,13 +463,22 @@ export class ContactListComponent implements OnInit {
     this.showAddContactDialog = false;
     this.isEditMode = false;
     this.editContactId = null;
+    // Reset newContact fields after submit
+    this.newContact = {
+      name: '',
+      email: '',
+      phone: '',
+      group: undefined,
+      tags: [],
+      dateAdded: undefined,
+    };
     // ...refresh/filter contacts as needed...
   }
 
   generateNumericId() {
     // Find max id and increment, fallback to 1 if empty
     return this.contacts.length > 0
-      ? Math.max(...this.contacts.map(c => c.id)) + 1
+      ? Math.max(...this.contacts.map((c) => c.id)) + 1
       : 1;
   }
 
