@@ -222,6 +222,7 @@
           *ngFor="let col of columns"
           pResizableColumn
           pSortableColumn="{{ col.field }}"
+          [ngStyle]="col.field === 'actions' ? {'padding-left': '8em'} : null"
         >
           {{ col.header }}
           <p-sortIcon [field]="col.field"></p-sortIcon>
