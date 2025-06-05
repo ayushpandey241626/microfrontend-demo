@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { loadRemoteModule } from '@angular-architects/module-federation';
 import { NotFoundComponent } from './not-found.component';
+import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
   {
@@ -11,6 +12,7 @@ export const routes: Routes = [
   },
   {
     path: 'contacts',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       loadRemoteModule({
         type: 'module',
@@ -20,6 +22,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       loadRemoteModule({
         type: 'module',

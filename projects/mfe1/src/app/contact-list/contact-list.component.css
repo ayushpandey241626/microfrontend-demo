@@ -226,6 +226,33 @@ div[style*="margin-bottom: 1rem"] .p-button {
   display: inline-block;
 }
 
+/* Center paginator arrows and push total rows count to the right */
+:host ::ng-deep .p-paginator {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 46em !important;
+  position: relative;
+}
+
+/* Place the total rows count at the absolute right */
+:host ::ng-deep .p-paginator .p-paginator-left {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  order: 2;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: #555;
+  padding-right: 0.5rem;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+}
+
 @media (max-width: 500px) {
   ::ng-deep .p-dialog {
     width: 95vw !important;

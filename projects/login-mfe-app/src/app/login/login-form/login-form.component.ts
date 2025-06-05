@@ -54,6 +54,7 @@ export class LoginFormComponent implements OnInit {
       const { username, password } = this.loginForm.value;
       if (username && password) {
         this.loginError = null;
+        localStorage.setItem('isLoggedIn', 'true');
         this.router.navigate(['/contacts']);
       } else {
         this.loginError = 'Invalid username or password';

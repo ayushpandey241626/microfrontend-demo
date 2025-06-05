@@ -196,6 +196,7 @@
     [value]="filteredContacts"
     paginator="true"
     [rows]="10"
+    [rowsPerPageOptions]="[5, 10, 20, 50]"
     [resizableColumns]="true"
     [columns]="[
       { field: 'name', header: 'Name' },
@@ -209,6 +210,13 @@
     [sortMode]="'multiple'"
     dataKey="id"
   >
+    <ng-template pTemplate="paginatorleft">
+      <span style="color: #555">
+        Total: {{ filteredContacts.length || 0 }} row{{
+          filteredContacts.length === 1 ? "" : "s"
+        }}
+      </span>
+    </ng-template>
     <ng-template pTemplate="header" let-columns>
       <tr>
         <th
