@@ -50,17 +50,17 @@ export class LoginFormComponent implements OnInit {
   ngOnInit(): void {}
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const { username, password } = this.loginForm.value;
-      if (username && password) {
-        this.loginError = null;
-        localStorage.setItem('isLoggedIn', 'true');
-        this.router.navigate(['/contacts']);
-      } else {
-        this.loginError = 'Invalid username or password';
-      }
-    } else {
+    if (this.loginForm.invalid) {
       this.loginError = 'Please fill in all fields';
+      return;
     }
+    const { username, password } = this.loginForm.value;
+    if (!username?.trim() || !password?.trim()) {
+      this.loginError = 'Invalid username or password';
+      return;
+    }
+    this.loginError = null;
+    localStorage.setItem('isLoggedIn', 'true');
+    this.router.navigate(['/contacts']);
   }
 }

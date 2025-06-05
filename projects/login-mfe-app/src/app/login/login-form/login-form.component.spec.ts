@@ -13,7 +13,7 @@ describe('LoginFormComponent', () => {
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     await TestBed.configureTestingModule({
       imports: [LoginFormComponent, ReactiveFormsModule],
-      providers: [{ provide: Router, useValue: routerSpy }]
+      providers: [{ provide: Router, useValue: routerSpy }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginFormComponent);
@@ -34,15 +34,22 @@ describe('LoginFormComponent', () => {
     usernameControl?.markAsTouched();
     fixture.detectChanges();
     const errorElem = fixture.debugElement.query(By.css('.error'));
-    expect(errorElem.nativeElement.textContent).toContain('Username is required');
+    expect(errorElem.nativeElement.textContent).toContain(
+      'Username is required'
+    );
   });
 
   it('should show error if password is empty and touched', () => {
+    // Touch both controls to ensure both error elements are rendered
+    const usernameControl = component.loginForm.get('username');
     const passwordControl = component.loginForm.get('password');
+    usernameControl?.markAsTouched();
     passwordControl?.markAsTouched();
     fixture.detectChanges();
-    const errorElem = fixture.debugElement.queryAll(By.css('.error'))[1];
-    expect(errorElem.nativeElement.textContent).toContain('Password is required');
+    const errorElems = fixture.debugElement.queryAll(By.css('.error'));
+    expect(errorElems[1].nativeElement.textContent).toContain(
+      'Password is required'
+    );
   });
 
   it('should set loginError if form is invalid on submit', () => {
@@ -65,6 +72,16 @@ describe('LoginFormComponent', () => {
 
   it('should set loginError if username or password is missing', () => {
     component.loginForm.setValue({ username: 'user', password: '' });
+    component.onSubmit();
+    expect(component.loginError).toBe('Please fill in all fields');
+  });
+
+  it('should set loginError to "Invalid username or password" if username or password is only whitespace', () => {
+    component.loginForm.setValue({ username: '   ', password: 'pass' });
+    component.onSubmit();
+    expect(component.loginError).toBe('Invalid username or password');
+
+    component.loginForm.setValue({ username: 'user', password: '   ' });
     component.onSubmit();
     expect(component.loginError).toBe('Invalid username or password');
   });
