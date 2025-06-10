@@ -6,8 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './mfe1.component.html',
   styleUrl: './mfe1.component.css',
 })
-export class Mfe1Component {
-  showAlert() {
-    alert('Hello from MFE1!');
-  }
-}
+export class Mfe1Component {}
